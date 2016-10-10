@@ -1,6 +1,7 @@
 package ua.edu.ucu.tempseries;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 
 public class TemperatureSeriesAnalysis {
 
@@ -9,6 +10,7 @@ public class TemperatureSeriesAnalysis {
     private double elementSum = 0;
     private double sqSum = 0;
     private double averageSqDeviation = 0;
+    int logicalSize = 0;
 
     public TemperatureSeriesAnalysis() {
 
@@ -16,6 +18,7 @@ public class TemperatureSeriesAnalysis {
 
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         array = temperatureSeries;
+        logicalSize = array.length;
     }
 
     public double average() {
@@ -188,6 +191,18 @@ public class TemperatureSeriesAnalysis {
     }
 
     public int addTemps(double... temps) {
-        return -1;
+        for (int i = 0; i < temps.length; i++) {
+            if (temps[i] < -273.0) {
+                throw new InputMismatchException();
+            }
+            else{
+                if (array.length == logicalSize) {
+                    array = Arrays.copyOf(array, array.length * 2);
+                }
+                array[logicalSize] = temps[i];
+                logicalSize++;
+            }
+        }
+        return logicalSize;
     }
 }
